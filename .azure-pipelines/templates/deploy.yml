@@ -1,0 +1,37 @@
+parameters:
+    environment: ''
+
+  jobs:
+  - deployment: deploy
+    displayName: 'Deploy app on ${{ parameters.environment }}'
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        preDeploy:
+          steps:
+          - download: current
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'ARM Template deployment: Resource Group scope'
+            inputs:
+              azureResourceManagerConnection: ''
+              subscriptionId: ''
+              resourceGroupName: '$(ResourceGroup)'
+              location: 'West Europe'
+              csmFile: '$(Pipeline.Workspace)/$(ArtifactName)/arm/windows-webapp-template.json'
+              overrideParameters: '-webAppName $(AppServiceName) -hostingPlanName $(AppServicePlanName) -appInsightsLocation WestEurope -sku F1'
+        deploy:
+          steps:
+          - download: current
+          - task: AzureRmWebAppDeployment@4
+            displayName: 'Deploy Azure App Service'
+            inputs:
+              azureSubscription: ''
+              WebAppName: '$(AppServiceName)'
+              packageForLinux: '$(Pipeline.Workspace)/$(ArtifactName)/app/aspnet-core-dotnet-core.zip'
+        # on:
+        #   failure:
+        #     steps:
+        #     - script: 'curl https://maker.ifttt.com/trigger/deployment_failed/with/key/$(MakerKey)'
+        #   success:
+        #     steps:
+        #     - script: 'curl https://maker.ifttt.com/trigger/deployment_success/with/key/$(MakerKey)'
