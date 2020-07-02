@@ -39,8 +39,8 @@ steps:
   displayName: 'Test Assemblies'
   inputs:
     testAssemblyVer2: |
-      Application/aspnet-core-dotnet-core.UnitTests/**/*Test*.dll
-      !Application/aspnet-core-dotnet-core.UnitTests/**/obj/**
+      Application/SampleWebApplication.UnitTests/**/*Test*.dll
+      !Application/SampleWebApplication.UnitTests/**/obj/**
     resultsFolder: '$(Agent.TempDirectory)/TestResults'
     vsTestVersion: toolsInstaller
     codeCoverageEnabled: true
