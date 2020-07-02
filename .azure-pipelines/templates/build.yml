@@ -1,0 +1,53 @@
+parameters:
+  solutionPath: ''
+  buildPlatform: 'any cpu'
+  buildConfiguration: 'Release'
+  artifactName: 'drop'
+
+steps:
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 5.5.1'
+  inputs:
+    versionSpec: 5.5.1
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '${{ parameters.solutionPath }}'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '${{ parameters.solutionPath }}'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)/app/"'
+    platform: '${{ parameters.buildPlatform }}'
+    configuration: '${{ parameters.buildConfiguration }}'
+
+- task: VisualStudioTestPlatformInstaller@1
+  displayName: 'Visual Studio Test Platform Installer'
+  inputs:
+    versionSelector: latestStable
+
+- task: VSTest@2
+  displayName: 'Test Assemblies'
+  inputs:
+    testAssemblyVer2: |
+      Application/SampleWebApplication.UnitTests/**/*Test*.dll
+      !Application/SampleWebApplication.UnitTests/**/obj/**
+    resultsFolder: '$(Agent.TempDirectory)/TestResults'
+    vsTestVersion: toolsInstaller
+    codeCoverageEnabled: true
+    platform: '${{ parameters.buildPlatform }}'
+    configuration: '${{ parameters.buildConfiguration }}'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/arm'
+  inputs:
+    SourceFolder: ArmTemplates
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/arm'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    ArtifactName: '${{ parameters.artifactName }}'
+  condition: succeededOrFailed()

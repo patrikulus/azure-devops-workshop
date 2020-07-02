@@ -1,8 +1,5 @@
 # Variables to set in Azure Pipelines:
 # SolutionPath: path to .sln file
-# BuildPlatform: msbuild platform (e.g. x86, x64, any cpu)
-# BuildConfiguration: msbuild condiguration (e.g. Debug, Release)
-# ArtifactName - name of the published artifact
 
 trigger: 
   - master
@@ -12,50 +9,7 @@ pool:
   vmImage: windows-2019
 
 steps:
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 5.5.1'
-  inputs:
-    versionSpec: 5.5.1
-
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: '$(SolutionPath)'
-
-- task: VSBuild@1
-  displayName: 'Build solution'
-  inputs:
-    solution: '$(SolutionPath)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)/app/"'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-
-- task: VisualStudioTestPlatformInstaller@1
-  displayName: 'Visual Studio Test Platform Installer'
-  inputs:
-    versionSelector: latestStable
-
-- task: VSTest@2
-  displayName: 'Test Assemblies'
-  inputs:
-    testAssemblyVer2: |
-      Application/SampleWebApplication.UnitTests/**/*Test*.dll
-      !Application/SampleWebApplication.UnitTests/**/obj/**
-    resultsFolder: '$(Agent.TempDirectory)/TestResults'
-    vsTestVersion: toolsInstaller
-    codeCoverageEnabled: true
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/arm'
-  inputs:
-    SourceFolder: ArmTemplates
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/arm'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    ArtifactName: '$(ArtifactName)'
-  condition: succeededOrFailed()
-
+- template: templates/build.yml
+  parameters:
+    solutionPath: $(SolutionPath)
+    
