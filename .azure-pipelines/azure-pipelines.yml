@@ -29,8 +29,8 @@ steps:
   parameters:
     serviceConnection: $(ServiceConnection)
     subscription: $(Subscription)
-    resourceGroup: 'workshop-prod-pl'
-    appServiceName: 'workshop-prod-app-pl'
+    resourceGroup: 'workshop-prod-pl05'
+    appServiceName: 'workshop-prod-app-pl05'
     appServicePlanName: 'workshop-prod-plan-pl'
   
     
