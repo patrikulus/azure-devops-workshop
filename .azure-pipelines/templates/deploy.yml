@@ -11,6 +11,7 @@ parameters:
 
 steps:
 - download: current
+- script: dir $(Pipeline.Workspace)
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: 'ARM Template deployment: Resource Group scope'
   inputs:
