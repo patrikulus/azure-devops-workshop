@@ -12,12 +12,15 @@ pool:
 variables:
   ServiceConnection: 'workshop-azure'
 
-steps:
-- template: templates/build.yml
-  parameters:
-    solutionPath: $(SolutionPath)
+jobs:
+- job: build-app
+  steps:
+  - template: templates/build.yml
+    parameters:
+      solutionPath: $(SolutionPath)
 
 - template: templates/deploy.yml
+  dependsOn: [build-app]
   parameters:
     serviceConnection: $(ServiceConnection)
     subscription: $(Subscription)
@@ -26,6 +29,7 @@ steps:
     appServicePlanName: 'workshop-test-plan-pl05'
 
 - template: templates/deploy.yml
+  dependsOn: [build-app]
   parameters:
     serviceConnection: $(ServiceConnection)
     subscription: $(Subscription)

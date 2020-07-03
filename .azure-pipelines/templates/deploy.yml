@@ -9,21 +9,23 @@ parameters:
   appInsightsLocation: 'WestEurope'
   artifactName: 'drop'
 
-steps:
-- download: current
-- script: dir $(System.DefaultWorkingDirectory)
-- task: AzureResourceManagerTemplateDeployment@3
-  displayName: 'ARM Template deployment: Resource Group scope'
-  inputs:
-    azureResourceManagerConnection: '${{ parameters.serviceConnection }}'
-    subscriptionId: '${{ parameters.subscription }}'
-    resourceGroupName: '${{ parameters.resourceGroup }}'
-    location: '${{ parameters.location }}'
-    csmFile: '$(System.DefaultWorkingDirectory)/${{ parameters.artifactName }}/arm/windows-webapp-template.json'
-    overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
-- task: AzureRmWebAppDeployment@4
-  displayName: 'Deploy Azure App Service'
-  inputs:
-    azureSubscription: '${{ parameters.serviceConnection }}'
-    WebAppName: '$(AppServiceName)'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/$(ArtifactName)/app/aspnet-core-dotnet-core.zip'
+jobs:
+- job: deploy-app
+  steps:
+  - download: current
+  - script: dir $(Pipeline.Workspace)
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'ARM Template deployment: Resource Group scope'
+    inputs:
+      azureResourceManagerConnection: '${{ parameters.serviceConnection }}'
+      subscriptionId: '${{ parameters.subscription }}'
+      resourceGroupName: '${{ parameters.resourceGroup }}'
+      location: '${{ parameters.location }}'
+      csmFile: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/arm/windows-webapp-template.json'
+      overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
+  - task: AzureRmWebAppDeployment@4
+    displayName: 'Deploy Azure App Service'
+    inputs:
+      azureSubscription: '${{ parameters.serviceConnection }}'
+      WebAppName: '$(AppServiceName)'
+      packageForLinux: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/app/SampleWebApplication.zip'
