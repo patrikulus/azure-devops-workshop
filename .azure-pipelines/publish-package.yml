@@ -1,0 +1,40 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  Solution: 'Library/MyLibrary.sln'
+  BuildPlatform: 'Any CPU'
+  BuildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '5.6.0'
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(Solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(Solution)'
+    vsVersion: '16.0'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'pack'
+    packagesToPack: 'Library/MyLibrary/MyLibrary.csproj'
+    versioningScheme: 'off'
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'b42a695f-a866-4e12-bf88-42f62d853d36' # Select your feed ID
+    allowPackageConflicts: true
