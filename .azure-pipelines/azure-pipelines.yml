@@ -21,16 +21,16 @@ steps:
   parameters:
     serviceConnection: $(ServiceConnection)
     subscription: $(Subscription)
-    resourceGroup: 'workshop-test-pl05'
-    appServiceName: 'workshop-test-app-pl05'
-    appServicePlanName: 'workshop-test-plan-pl05'
+    resourceGroup: 'workshop-test-pl07'
+    appServiceName: 'workshop-test-app-pl07'
+    appServicePlanName: 'workshop-test-plan-pl07'
 
 - template: templates/deploy.yml
   parameters:
     serviceConnection: $(ServiceConnection)
     subscription: $(Subscription)
-    resourceGroup: 'workshop-prod-pl05'
-    appServiceName: 'workshop-prod-app-pl05'
-    appServicePlanName: 'workshop-prod-plan-pl'
+    resourceGroup: 'workshop-prod-pl07'
+    appServiceName: 'workshop-prod-app-pl07'
+    appServicePlanName: 'workshop-prod-plan-pl07'
   
     
