@@ -28,11 +28,7 @@ parameters:
               resourceGroupName: '${{ parameters.resourceGroup }}'
               location: '${{ parameters.location }}'
               csmFile: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/arm/windows-webapp-template.json'
-              overrideParameters: | 
-                '-webAppName ${{ parameters.appServiceName }} 
-                -hostingPlanName ${{ parameters.appServicePlanName }} 
-                -appInsightsLocation ${{ parameters.appInsightsLocation }} 
-                -sku ${{ parameters.sku }}'
+              overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
         deploy:
           steps:
           - download: current
