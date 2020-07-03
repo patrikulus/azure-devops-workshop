@@ -16,8 +16,9 @@ steps:
 - task: VSTest@2
   displayName: 'Test Assemblies'
   inputs:
+    searchFolder: $(Pipeline.Workspace)/${{ parameters.artifactName }}/ft/
     testAssemblyVer2: |
-      '$(Pipeline.Workspace)/${{ parameters.artifactName }}/ft/*Test*.dll
+      *Test*.dll
     resultsFolder: '$(Agent.TempDirectory)/TestResults'
     vsTestVersion: toolsInstaller
     codeCoverageEnabled: true
