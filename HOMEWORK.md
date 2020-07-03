@@ -16,9 +16,17 @@
 * Go to Pipelines, click New Pipeline in the right upper corner.
 * Select Azure Repos Git and next select Existing Azure Pipelines YAML file
 * Select branch `solution/feed-package` and path `/.azure-pipelines/publish-package` then click Continue
-* Click Run
 
 ![pipeline-creation](md-images/feed2.PNG)
+
+* In the last task, click on 'Settings' above the task 
+* Select your feed from the list
+
+![select-feed](md-images/feed4.PNG)
+
+* Click Add
+* Click Run in the right top corner
+* Wait for pipeline to finish the run
 
 ### More ambitious way
 
