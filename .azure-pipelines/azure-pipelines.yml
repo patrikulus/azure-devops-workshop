@@ -1,6 +1,10 @@
 # Variables to set in Azure Pipelines:
 # SolutionPath: path to .sln file
+# Variables to set in variable groups TEST and PROD:
 # Subscription: Azure subscription ID
+# ResourceGroup: azure resource group
+# AppServiceName: azure app service name
+# AppServicePlanName: azure app service plan name
 
 trigger: 
   - master
@@ -23,26 +27,30 @@ stages:
 
 - stage: Deploy-TEST
   dependsOn: ['Build']
+  variables:
+    group: 'TEST'
   jobs:
   - template: templates/deploy.yml
     parameters:
       environment: TEST
       serviceConnection: $(ServiceConnection)
       subscription: $(Subscription)
-      resourceGroup: 'workshop-test-pl'
-      appServiceName: 'workshop-test-app-pl'
-      appServicePlanName: 'workshop-test-plan-pl'
+      resourceGroup: $(ResourceGroup)
+      appServiceName: $(AppServiceName)
+      appServicePlanName: $(AppServicePlanName)
 
-- stage: Deploy-TEST
+- stage: Deploy-PROD
   dependsOn: ['Build']
+  variables:
+    group: 'PROD'
   jobs:
   - template: templates/deploy.yml
     parameters:
       environment: PROD
       serviceConnection: $(ServiceConnection)
       subscription: $(Subscription)
-      resourceGroup: 'workshop-prod-pl'
-      appServiceName: 'workshop-prod-app-pl'
-      appServicePlanName: 'workshop-prod-plan-pl'
+      resourceGroup: $(ResourceGroup)
+      appServiceName: $(AppServiceName)
+      appServicePlanName: $(AppServicePlanName)
   
     

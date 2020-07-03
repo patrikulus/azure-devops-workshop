@@ -35,5 +35,5 @@ jobs:
           displayName: 'Deploy Azure App Service'
           inputs:
             azureSubscription: '${{ parameters.serviceConnection }}'
-            WebAppName: '$(AppServiceName)'
-            packageForLinux: '$(Pipeline.Workspace)/$(ArtifactName)/app/aspnet-core-dotnet-core.zip'
+            WebAppName: '${{ parameters.appServiceName }}'
+            packageForLinux: '$(Pipeline.Workspace)/$(ArtifactName)/app/SampleWebApplication.zip'
