@@ -5,6 +5,7 @@ parameters:
   webAppUrl: ''
 
 steps:
+- checkout: none
 - download: current
 
 - task: VisualStudioTestPlatformInstaller@1
@@ -16,7 +17,7 @@ steps:
   displayName: 'Test Assemblies'
   inputs:
     testAssemblyVer2: |
-      '$(Pipeline.Workspace)/${{ parameters.artifactName }}/ft/**/*Test*.dll
+      '$(Pipeline.Workspace)/${{ parameters.artifactName }}/ft/*Test*.dll
     resultsFolder: '$(Agent.TempDirectory)/TestResults'
     vsTestVersion: toolsInstaller
     codeCoverageEnabled: true
