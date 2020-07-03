@@ -4,6 +4,7 @@ parameters:
   artifactName: 'drop'
   webAppUrl: ''
 
+steps:
 - download: current
 
 - task: VisualStudioTestPlatformInstaller@1
