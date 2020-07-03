@@ -45,10 +45,12 @@ stages:
     - group: 'TEST'
     - name: ApplicationUrl
       value: 'https://$(AppServiceName).azurewebsites.net'
-  steps:
-  - template: templates/verify.yml
-    parameters:
-      webAppUrl: '$(ApplicationUrl)'
+  jobs:
+  - job: verify_app
+    steps:
+    - template: templates/verify.yml
+      parameters:
+        webAppUrl: '$(ApplicationUrl)'
 
 - stage: Deploy_PROD
   dependsOn: ['Verify_TEST']
