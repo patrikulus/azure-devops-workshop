@@ -1,40 +1,39 @@
 parameters:
-    environment: ''
-    serviceConnection: ''
-    subscription: ''
-    resourceGroup: ''
-    location: 'West Europe'
-    appServiceName: ''
-    appServicePlanName: ''
-    sku: 'F1'
-    appInsightsLocation: 'WestEurope'
-    artifactName: 'drop'
+  environment: ''
+  serviceConnection: ''
+  subscription: ''
+  resourceGroup: ''
+  location: 'West Europe'
+  appServiceName: ''
+  appServicePlanName: ''
+  sku: 'F1'
+  appInsightsLocation: 'WestEurope'
+  artifactName: 'drop'
 
-
-  jobs:
-  - deployment: deploy
-    displayName: 'Deploy app on ${{ parameters.environment }}'
-    environment: ${{ parameters.environment }}
-    strategy:
-      runOnce:
-        preDeploy:
-          steps:
-          - download: current
-          - task: AzureResourceManagerTemplateDeployment@3
-            displayName: 'ARM Template deployment: Resource Group scope'
-            inputs:
-              azureResourceManagerConnection: '${{ parameters.serviceConnection }}'
-              subscriptionId: '${{ parameters.subscription }}'
-              resourceGroupName: '${{ parameters.resourceGroup }}'
-              location: '${{ parameters.location }}'
-              csmFile: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/arm/windows-webapp-template.json'
-              overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
-        deploy:
-          steps:
-          - download: current
-          - task: AzureRmWebAppDeployment@4
-            displayName: 'Deploy Azure App Service'
-            inputs:
-              azureSubscription: '${{ parameters.subscription }}'
-              WebAppName: '$(AppServiceName)'
-              packageForLinux: '$(Pipeline.Workspace)/$(ArtifactName)/app/aspnet-core-dotnet-core.zip'
+jobs:
+- deployment: deploy
+  displayName: 'Deploy app on ${{ parameters.environment }}'
+  environment: ${{ parameters.environment }}
+  strategy:
+    runOnce:
+      preDeploy:
+        steps:
+        - download: current
+        - task: AzureResourceManagerTemplateDeployment@3
+          displayName: 'ARM Template deployment: Resource Group scope'
+          inputs:
+            azureResourceManagerConnection: '${{ parameters.serviceConnection }}'
+            subscriptionId: '${{ parameters.subscription }}'
+            resourceGroupName: '${{ parameters.resourceGroup }}'
+            location: '${{ parameters.location }}'
+            csmFile: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/arm/windows-webapp-template.json'
+            overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
+      deploy:
+        steps:
+        - download: current
+        - task: AzureRmWebAppDeployment@4
+          displayName: 'Deploy Azure App Service'
+          inputs:
+            azureSubscription: '${{ parameters.subscription }}'
+            WebAppName: '$(AppServiceName)'
+            packageForLinux: '$(Pipeline.Workspace)/$(ArtifactName)/app/aspnet-core-dotnet-core.zip'
