@@ -34,6 +34,6 @@ jobs:
         - task: AzureRmWebAppDeployment@4
           displayName: 'Deploy Azure App Service'
           inputs:
-            azureSubscription: '${{ parameters.subscription }}'
+            azureSubscription: '${{ parameters.serviceConnection }}'
             WebAppName: '$(AppServiceName)'
             packageForLinux: '$(Pipeline.Workspace)/$(ArtifactName)/app/aspnet-core-dotnet-core.zip'

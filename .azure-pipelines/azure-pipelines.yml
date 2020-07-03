@@ -12,27 +12,37 @@ pool:
 variables:
   ServiceConnection: 'workshop-azure'
 
-steps:
-- template: templates/build.yml
-  parameters:
-    solutionPath: $(SolutionPath)
+stages:
+- stage: Build
+  jobs:
+  - job: build-app
+    steps:
+    - template: templates/build.yml
+      parameters:
+        solutionPath: $(SolutionPath)
 
-- template: templates/deploy.yml
-  parameters:
-    environment: TEST
-    serviceConnection: $(ServiceConnection)
-    subscription: $(Subscription)
-    resourceGroup: 'workshop-test-pl'
-    appServiceName: 'workshop-test-app-pl'
-    appServicePlanName: 'workshop-test-plan-pl'
+- stage: Deploy-TEST
+  dependsOn: ['Build']
+  jobs:
+  - template: templates/deploy.yml
+    parameters:
+      environment: TEST
+      serviceConnection: $(ServiceConnection)
+      subscription: $(Subscription)
+      resourceGroup: 'workshop-test-pl'
+      appServiceName: 'workshop-test-app-pl'
+      appServicePlanName: 'workshop-test-plan-pl'
 
-- template: templates/deploy.yml
-  parameters:
-    environment: PROD
-    serviceConnection: $(ServiceConnection)
-    subscription: $(Subscription)
-    resourceGroup: 'workshop-prod-pl'
-    appServiceName: 'workshop-prod-app-pl'
-    appServicePlanName: 'workshop-prod-plan-pl'
+- stage: Deploy-TEST
+  dependsOn: ['Build']
+  jobs:
+  - template: templates/deploy.yml
+    parameters:
+      environment: PROD
+      serviceConnection: $(ServiceConnection)
+      subscription: $(Subscription)
+      resourceGroup: 'workshop-prod-pl'
+      appServiceName: 'workshop-prod-app-pl'
+      appServicePlanName: 'workshop-prod-plan-pl'
   
     
