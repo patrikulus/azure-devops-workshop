@@ -7,25 +7,20 @@ parameters:
   appServicePlanName: ''
   sku: 'F1'
   appInsightsLocation: 'WestEurope'
-  artifactName: 'drop'
 
-jobs:
-- job: deploy-app
-  steps:
-  - download: current
-  - script: dir $(Pipeline.Workspace)
-  - task: AzureResourceManagerTemplateDeployment@3
-    displayName: 'ARM Template deployment: Resource Group scope'
-    inputs:
-      azureResourceManagerConnection: '${{ parameters.serviceConnection }}'
-      subscriptionId: '${{ parameters.subscription }}'
-      resourceGroupName: '${{ parameters.resourceGroup }}'
-      location: '${{ parameters.location }}'
-      csmFile: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/arm/windows-webapp-template.json'
-      overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
-  - task: AzureRmWebAppDeployment@4
-    displayName: 'Deploy Azure App Service'
-    inputs:
-      azureSubscription: '${{ parameters.serviceConnection }}'
-      WebAppName: '$(AppServiceName)'
-      packageForLinux: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/app/SampleWebApplication.zip'
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'ARM Template deployment: Resource Group scope'
+  inputs:
+    azureResourceManagerConnection: '${{ parameters.serviceConnection }}'
+    subscriptionId: '${{ parameters.subscription }}'
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+    location: '${{ parameters.location }}'
+    csmFile: 'ArmTemplates/windows-webapp-template.json'
+    overrideParameters: '-webAppName ${{ parameters.appServiceName }} -hostingPlanName ${{ parameters.appServicePlanName }} -appInsightsLocation ${{ parameters.appInsightsLocation }} -sku ${{ parameters.sku }}'
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Deploy Azure App Service'
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    WebAppName: '$(AppServiceName)'
+    packageForLinux: '$(Build.ArtifactsStagingDirectory)/app/SampleWebApplication.zip'
