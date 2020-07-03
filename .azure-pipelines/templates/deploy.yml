@@ -11,7 +11,7 @@ parameters:
   artifactName: 'drop'
 
 jobs:
-- deployment: deploy
+- deployment: deploy_app
   displayName: 'Deploy app on ${{ parameters.environment }}'
   environment: ${{ parameters.environment }}
   strategy:

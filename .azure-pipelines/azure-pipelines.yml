@@ -19,7 +19,7 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - job: build-app
+  - job: build_app
     steps:
     - template: templates/build.yml
       parameters:
