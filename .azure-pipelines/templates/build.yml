@@ -46,6 +46,12 @@ steps:
     SourceFolder: ArmTemplates
     TargetFolder: '$(Build.ArtifactStagingDirectory)/arm'
 
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)/ft'
+  inputs:
+    SourceFolder: Application/SampleWebApplication.FunctionalTests/bin/${{ parameters.buildConfiguration }}
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/ft'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:

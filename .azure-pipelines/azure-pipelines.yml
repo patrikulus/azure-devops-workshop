@@ -39,8 +39,19 @@ stages:
       appServiceName: $(AppServiceName)
       appServicePlanName: $(AppServicePlanName)
 
+- stage: Verify_TEST
+  dependsOn: ['Deploy_TEST']
+  variables:
+    - group: 'TEST'
+    - name: ApplicationUrl
+      value: 'https://$(AppServiceName).azurewebsites.net'
+  steps:
+  - template: templates/verify.yml
+    parameters:
+      webAppUrl: '$(ApplicationUrl)'
+
 - stage: Deploy_PROD
-  dependsOn: ['Build']
+  dependsOn: ['Verify_TEST']
   variables:
   - group: 'PROD'
   jobs:

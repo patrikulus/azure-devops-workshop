@@ -1,0 +1,25 @@
+parameters:
+  buildPlatform: 'any cpu'
+  buildConfiguration: 'Release'
+  artifactName: 'drop'
+  webAppUrl: ''
+
+- download: current
+
+- task: VisualStudioTestPlatformInstaller@1
+  displayName: 'Visual Studio Test Platform Installer'
+  inputs:
+    versionSelector: latestStable
+
+- task: VSTest@2
+  displayName: 'Test Assemblies'
+  inputs:
+    testAssemblyVer2: |
+      '$(Pipeline.Workspace)/${{ parameters.artifactName }}/ft/**/*Test*.dll
+    resultsFolder: '$(Agent.TempDirectory)/TestResults'
+    vsTestVersion: toolsInstaller
+    codeCoverageEnabled: true
+    platform: '${{ parameters.buildPlatform }}'
+    configuration: '${{ parameters.buildConfiguration }}'
+    runSettingsFile: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/ft/functionalTests.runsettings'
+    overrideTestrunParameters: '-webAppUrl ${{ parameters.webAppUrl }}'
