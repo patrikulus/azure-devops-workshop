@@ -9,7 +9,7 @@ parameters:
   appInsightsLocation: 'WestEurope'
 
 steps:
-- script: dir $(Build.ArtifactsStagingDirectory)
+- script: dir $(Build.ArtifactStagingDirectory)
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: 'ARM Template deployment: Resource Group scope'
   inputs:
@@ -24,4 +24,4 @@ steps:
   inputs:
     azureSubscription: '${{ parameters.serviceConnection }}'
     WebAppName: '$(AppServiceName)'
-    packageForLinux: '$(Build.ArtifactsStagingDirectory)/app/SampleWebApplication.zip'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/app/SampleWebApplication.zip'
