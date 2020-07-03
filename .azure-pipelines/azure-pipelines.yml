@@ -1,5 +1,6 @@
 # Variables to set in Azure Pipelines:
 # SolutionPath: path to .sln file
+# Subscription: Azure subscription ID
 
 trigger: 
   - master
@@ -8,8 +9,33 @@ pool:
   name: Azure Pipelines
   vmImage: windows-2019
 
+variables:
+  ServiceConnection: 'workshop-azure'
+
 steps:
 - template: templates/build.yml
   parameters:
     solutionPath: $(SolutionPath)
+  displayname: 'Build app'
+
+- template: templates/deploy.yml
+  parameters:
+    environment: TEST
+    serviceConnection: $(ServiceConnection)
+    subscription: $(Subscription)
+    resourceGroup: 'workshop-test-pl'
+    appServiceName: 'workshop-test-app-pl'
+    appServicePlanName: 'workshop-test-plan-pl'
+  displayname: 'Deploy TEST'
+
+- template: templates/deploy.yml
+  parameters:
+    environment: PROD
+    serviceConnection: $(ServiceConnection)
+    subscription: $(Subscription)
+    resourceGroup: 'workshop-prod-pl'
+    appServiceName: 'workshop-prod-app-pl'
+    appServicePlanName: 'workshop-prod-plan-pl'
+  displayname: 'Deploy PROD'
+  
     
