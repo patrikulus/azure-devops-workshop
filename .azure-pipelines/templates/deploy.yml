@@ -9,6 +9,7 @@ parameters:
   appInsightsLocation: 'WestEurope'
 
 steps:
+- script: dir $(Build.ArtifactsStagingDirectory)
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: 'ARM Template deployment: Resource Group scope'
   inputs:
