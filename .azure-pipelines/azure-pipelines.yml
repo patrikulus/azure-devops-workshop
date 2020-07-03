@@ -16,7 +16,7 @@ steps:
 - template: templates/build.yml
   parameters:
     solutionPath: $(SolutionPath)
-  displayname: 'Build app'
+  displayName: 'Build app'
 
 - template: templates/deploy.yml
   parameters:
@@ -26,7 +26,7 @@ steps:
     resourceGroup: 'workshop-test-pl'
     appServiceName: 'workshop-test-app-pl'
     appServicePlanName: 'workshop-test-plan-pl'
-  displayname: 'Deploy TEST'
+  displayName: 'Deploy TEST'
 
 - template: templates/deploy.yml
   parameters:
@@ -36,6 +36,6 @@ steps:
     resourceGroup: 'workshop-prod-pl'
     appServiceName: 'workshop-prod-app-pl'
     appServicePlanName: 'workshop-prod-plan-pl'
-  displayname: 'Deploy PROD'
+  displayName: 'Deploy PROD'
   
     
