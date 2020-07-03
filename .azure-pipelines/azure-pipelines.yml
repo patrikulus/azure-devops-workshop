@@ -14,12 +14,10 @@ variables:
 
 steps:
 - template: templates/build.yml
-  displayName: 'Build app'
   parameters:
     solutionPath: $(SolutionPath)
 
 - template: templates/deploy.yml
-  displayName: 'Deploy TEST'
   parameters:
     environment: TEST
     serviceConnection: $(ServiceConnection)
@@ -29,7 +27,6 @@ steps:
     appServicePlanName: 'workshop-test-plan-pl'
 
 - template: templates/deploy.yml
-  displayName: 'Deploy PROD'
   parameters:
     environment: PROD
     serviceConnection: $(ServiceConnection)
