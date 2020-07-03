@@ -23,5 +23,5 @@ steps:
   displayName: 'Deploy Azure App Service'
   inputs:
     azureSubscription: '${{ parameters.serviceConnection }}'
-    WebAppName: '$(AppServiceName)'
+    WebAppName: '${{ parameters.appServiceName }}'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/app/SampleWebApplication.zip'
