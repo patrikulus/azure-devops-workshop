@@ -28,7 +28,7 @@ stages:
 - stage: Deploy_TEST
   dependsOn: ['Build']
   variables:
-    group: 'TEST'
+  - group: 'TEST'
   jobs:
   - template: templates/deploy.yml
     parameters:
@@ -42,7 +42,7 @@ stages:
 - stage: Deploy_PROD
   dependsOn: ['Build']
   variables:
-    group: 'PROD'
+  - group: 'PROD'
   jobs:
   - template: templates/deploy.yml
     parameters:
